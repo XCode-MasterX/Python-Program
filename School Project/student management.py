@@ -6,7 +6,7 @@ cur = con.cursor()
 # END #
 
 def exec(command):
-    cur.execute(command);
+    cur.execute(command)
 
 def update_all_student_grades(connection):
     connection.cursor().execute("update students set class = class + 1;");
