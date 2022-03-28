@@ -14,7 +14,7 @@ def update_all_student_grades(connection):
 def create_id(student_info):
     id = str(student_info['mobile'][0:5])
     id += str(student_info['firstname'])
-    student_info['unique_id'] = id;
+    student_info['student_id'] = id;
 
 def admit_new_student():
     stud = {}
@@ -31,6 +31,14 @@ def admit_new_student():
     create_id(stud);
 
 def update_student(id):
+    exec(f"select * from students where student_id = {id}")
+    new_info = ['id', 'firstname', 'lastname', 'father_name', 'mother_name', 'mobile', 'email', 'dob', 'class', 'section', 'address', 'pin', 'fees', 'fees_paid']
+    new_info = zip(new_info, cur.fetchall()[0])
+
+    command = f"update Students set {new_info} where student_id = {id}"
+    exec(command)
+
+def pay_fees(id):
     pass
 
 def check_database_existance():
@@ -41,7 +49,10 @@ def check_database_existance():
     exec('use Institution;');
 
 def display_students():
-    pass
+    exec('select * from Students')
+    output = cur.fetchall()
+    for i in output:
+        print(*i)
 
 def check_table_existance():
     exec('use Institution;')
