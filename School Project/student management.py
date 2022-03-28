@@ -1,7 +1,7 @@
 import mysql.connector as msc
 
 # GLOBAL #
-con = msc.connect(user = 'root', host = 'localhost', password = '1Ar2pan34')
+con = msc.connect(user = 'root', host = 'localhost', password = 'something')
 cur = con.cursor()
 # END #
 
@@ -34,7 +34,7 @@ def update_student(id):
     exec(f"select * from students where student_id = {id}")
     new_info = ['id', 'firstname', 'lastname', 'father_name', 'mother_name', 'mobile', 'email', 'dob', 'class', 'section', 'address', 'pin', 'fees', 'fees_paid']
     new_info = zip(new_info, cur.fetchall()[0])
-
+    ch = int(input("What would you like to update?\n1: Mobile\n2: Email\n3: Class\n4: Section\n5: "))
     command = f"update Students set {new_info} where student_id = {id}"
     exec(command)
 
@@ -75,7 +75,19 @@ def check_table_existance():
                 fees integer,
                 fees_paid integer);''')
 
+def main():
+    pass
+
 if __name__ == "__main__":
     check_database_existance()
     check_table_existance()
-    password = ""
+    password = "12345"
+    for i in range(5):
+        enter_pass = input("Enter the password: ")
+        if enter_pass == password:
+            break
+    else:
+        from sys import exit
+        exit()
+    
+    main() # TODO
