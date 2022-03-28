@@ -39,7 +39,8 @@ def update_student(id):
     exec(command)
 
 def pay_fees(id):
-    pass
+    fee = int(input("Enter the amount paid: "))
+    exec(f'update Student set fees = fees + {fee} where student_id = {id}')
 
 def check_database_existance():
     exec('show databases;')
