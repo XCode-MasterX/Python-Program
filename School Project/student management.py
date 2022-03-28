@@ -40,7 +40,7 @@ def admit_new_student():
     stud['pin'] = input('Enter the pin of the address: ')
     create_id(stud)
     x = info_to_sql(stud)
-    exec(f'insert into value({x})')
+    exec(f'insert into values({x})')
 
 def update_student(id):
     exec(f"select * from students where student_id = {id}")
