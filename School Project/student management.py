@@ -16,6 +16,16 @@ def create_id(student_info):
     id += str(student_info['firstname'])
     student_info['student_id'] = id;
 
+def info_to_sql(stud):
+    string = ""
+    for i in stud:
+        if stud[i] is str:
+            string += f"{i} = \'{stud[i]}\', "
+        elif stud[i] is int:
+            string += f"{i} = {stud[i]}, "
+    
+    return string[0 : -1]
+
 def admit_new_student():
     stud = {}
     stud['firstname'] = input('Enter the firstname of student: ')
@@ -28,13 +38,26 @@ def admit_new_student():
     stud['section'] = input('Enter the section of the student: ')
     stud['address'] = input('Enter the address: ')
     stud['pin'] = input('Enter the pin of the address: ')
-    create_id(stud);
+    create_id(stud)
+    x = info_to_sql(stud)
+    exec(f'insert into value({x})')
 
 def update_student(id):
     exec(f"select * from students where student_id = {id}")
     new_info = ['id', 'firstname', 'lastname', 'father_name', 'mother_name', 'mobile', 'email', 'dob', 'class', 'section', 'address', 'pin', 'fees', 'fees_paid']
     new_info = zip(new_info, cur.fetchall()[0])
     ch = int(input("What would you like to update?\n1: Mobile\n2: Email\n3: Class\n4: Section\n5: "))
+    if ch == 1:
+        new_info['mobile'] = input('Enter the new mobile number: ')
+    elif ch == 2:
+        new_info['email'] = input("Enter the new email: ")
+    elif ch == 3:
+        new_info['class'] = input("Enter the new class: ")
+    elif ch == 4:
+        new_info['section'] = input("Enter the new section: ")
+    elif ch == 5:
+        pass
+
     command = f"update Students set {new_info} where student_id = {id}"
     exec(command)
 
