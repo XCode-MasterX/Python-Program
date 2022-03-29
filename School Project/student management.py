@@ -47,9 +47,11 @@ def admit_new_student():
 
 def update_student(id):
     exec(f"select * from students where student_id = {id}")
+    
     new_info = ['id', 'firstname', 'lastname', 'father_name', 'mother_name', 'mobile', 'email', 'dob', 'class', 'section', 'address', 'pin', 'fees', 'fees_paid']
     new_info = zip(new_info, cur.fetchall()[0])
     ch = int(input("What would you like to update?\n1: Mobile\n2: Email\n3: Class\n4: Section\n5: "))
+    
     if ch == 1:
         new_info['mobile'] = input('Enter the new mobile number: ')
     elif ch == 2:
@@ -58,9 +60,8 @@ def update_student(id):
         new_info['class'] = input("Enter the new class: ")
     elif ch == 4:
         new_info['section'] = input("Enter the new section: ")
-    elif ch == 5:
-        pass
-
+    
+    new_info = info_to_sql(new_info)
     command = f"update Students set {new_info} where student_id = {id}"
     exec(command)
 
