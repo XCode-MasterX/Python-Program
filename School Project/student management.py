@@ -19,12 +19,15 @@ def create_id(student_info):
 def info_to_sql(stud):
     string = ""
     for i in stud:
-        if stud[i] is str:
+        if type(stud[i]) is str:
             string += f"{i} = \'{stud[i]}\', "
-        elif stud[i] is int:
+        elif type(stud[i]) is int:
             string += f"{i} = {stud[i]}, "
     
-    return string[0 : -1]
+    return string[0 : -2]
+
+def remove_student(id):
+    exec('delete from Students where student_id = id;')
 
 def admit_new_student():
     stud = {}
