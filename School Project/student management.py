@@ -1,7 +1,7 @@
 import mysql.connector as msc
 
 # GLOBAL #
-con = msc.connect(user = 'root', host = 'localhost', password = 'something')
+con = msc.connect(user = 'root', host = 'localhost', password = input("Enter the SQL Password: "))
 cur = con.cursor()
 # END #
 
@@ -113,6 +113,8 @@ if __name__ == "__main__":
         enter_pass = input("Enter the password: ")
         if enter_pass == password:
             break
+        else:
+            print(f"Wrong password. {5-i-1} chances left.")
     else:
         from sys import exit
         exit()
