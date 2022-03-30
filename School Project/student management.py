@@ -30,11 +30,11 @@ def info_to_sql(stud):
     string = ""
     for i in stud:
         if i == 'date_of_birth':
-            string += f"{i} = str_to_date(\'{stud[i]}\', 'YYYY-MM-DD')"
+            string += f"str_to_date(\'{stud[i]}\', '%Y-%m-%d'), "
         elif type(stud[i]) is str:
-            string += f"{i} = \'{stud[i]}\', "
+            string += f"\'{stud[i]}\', "
         elif type(stud[i]) is int:
-            string += f"{i} = {stud[i]}, "
+            string += f"{stud[i]}, "
     
     return string[0 : -2]
 
@@ -53,19 +53,23 @@ def remove_student():
 
 def admit_new_student():
     stud = {}
+    create_id(stud)
     stud['firstname'] = input('Enter the firstname of student: ')
-    stud['lastname'] = input('Enter the lastname of the student')
-    stud['f-name'] = input('Enter the fathers name: ')
-    stud['m-name'] = input('Enter the mothers name: ')
+    stud['lastname'] = input('Enter the lastname of the student: ')
+    stud['father_name'] = input('Enter the fathers name: ')
+    stud['mother_name'] = input('Enter the mothers name: ')
     stud['mobile'] = input('Enter the mobile number: ')
+    stud['email'] = input("Enter the email of the student: ")
     stud['date_of_birth'] = input('Enter the date of birth (YYYY-MM-DD): ')
     stud['class'] = input('Enter the class of the student: ')
     stud['section'] = input('Enter the section of the student: ')
     stud['address'] = input('Enter the address: ')
     stud['pin'] = input('Enter the pin of the address: ')
-    create_id(stud)
+    stud['fee'] = input('Enter the fee of the Student: ')
+    stud['fees_paid'] = input("Enter the fees paid of the student: ")
     x = info_to_sql(stud)
-    exec(f'insert into values({x})')
+    print('\n\n', x, '\n\n')
+    exec(f'insert into Students values({x})')
 
 def modify_student(id):
     exec(f"select * from students where student_id = {id}")
@@ -102,7 +106,7 @@ def display_students():
     exec('select * from Students;')
     output = cur.fetchall()
     for i in output:
-        print(*i)
+        print(*i, sep = ' | ')
 
 def check_table_existance():
     exec('use Institution;')
@@ -143,6 +147,7 @@ def main():
             student_report()
         elif ch == 6:
             display_students()
+        con.commit()
 
 if __name__ == "__main__":
     password = "12345"
