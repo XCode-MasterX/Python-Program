@@ -1,5 +1,15 @@
 import mysql.connector as msc
 
+'''
+TODO:
+i) Admiting new student (done)
+ii) Deleting Student (done)
+iii) Displaying all students (done)
+iv) Report of Student (not done)
+v) Detail Modification (done)
+vi) Fees Collection (done)
+'''
+
 # GLOBAL #
 con = msc.connect(user = 'root', host = 'localhost', password = input("Enter the SQL Password: "))
 cur = con.cursor()
@@ -8,26 +18,38 @@ cur = con.cursor()
 def exec(command):
     cur.execute(command)
 
-def update_all_student_grades(connection):
+def update_all_student_classes(connection):
     connection.cursor().execute("update students set class = class + 1;");
 
 def create_id(student_info):
-    id = str(student_info['mobile'][0:5])
-    id += str(student_info['firstname'])
-    student_info['student_id'] = id;
+    exec('select * from Students;')
+    id = int(cur.fetchall()[0][0])
+    student_info['student_id'] = id + 1
 
 def info_to_sql(stud):
     string = ""
     for i in stud:
-        if type(stud[i]) is str:
+        if i == 'date_of_birth':
+            string += f"{i} = str_to_date(\'{stud[i]}\', 'YYYY-MM-DD')"
+        elif type(stud[i]) is str:
             string += f"{i} = \'{stud[i]}\', "
         elif type(stud[i]) is int:
             string += f"{i} = {stud[i]}, "
     
     return string[0 : -2]
 
-def remove_student(id):
-    exec('delete from Students where student_id = id;')
+def remove_student():
+    ch = int(input('\n\n1: Use ID to delete specific student\n2: Delete Students of specific Class\n3: Delete Students of specific class and section\nEnter your choice: '))
+    if ch == 1:
+        id = int(input("Enter the Student id you want to delete: "))
+        exec(f'delete from Students where student_id = {id};')
+    elif ch == 2:
+        std = int(input('Enter the student class in roman-numerals: '))
+        exec(f'delete from Students where class = {std};')
+    elif ch == 3:
+        std = int(input("Enter the students' class in roman-numerals: "))
+        sec = int(input("Enter the students' section: "))
+        exec(f'delete from Students where class = {std} and section = {sec};')
 
 def admit_new_student():
     stud = {}
@@ -36,7 +58,7 @@ def admit_new_student():
     stud['f-name'] = input('Enter the fathers name: ')
     stud['m-name'] = input('Enter the mothers name: ')
     stud['mobile'] = input('Enter the mobile number: ')
-    stud['dob'] = input('Enter the date of birth: ')
+    stud['date_of_birth'] = input('Enter the date of birth (YYYY-MM-DD): ')
     stud['class'] = input('Enter the class of the student: ')
     stud['section'] = input('Enter the section of the student: ')
     stud['address'] = input('Enter the address: ')
@@ -45,7 +67,7 @@ def admit_new_student():
     x = info_to_sql(stud)
     exec(f'insert into values({x})')
 
-def update_student(id):
+def modify_student(id):
     exec(f"select * from students where student_id = {id}")
     
     new_info = ['id', 'firstname', 'lastname', 'father_name', 'mother_name', 'mobile', 'email', 'dob', 'class', 'section', 'address', 'pin', 'fees', 'fees_paid']
@@ -67,7 +89,7 @@ def update_student(id):
 
 def pay_fees(id):
     fee = int(input("Enter the amount paid: "))
-    exec(f'update Student set fees = fees + {fee} where student_id = {id}')
+    exec(f'update Student set fees_paid = fees_paid + {fee} where student_id = {id}')
 
 def check_database_existance():
     exec('show databases;')
@@ -77,7 +99,7 @@ def check_database_existance():
     exec('use Institution;');
 
 def display_students():
-    exec('select * from Students')
+    exec('select * from Students;')
     output = cur.fetchall()
     for i in output:
         print(*i)
@@ -102,12 +124,27 @@ def check_table_existance():
                 fees integer,
                 fees_paid integer);''')
 
-def main():
+def student_report():
     pass
 
+def main():
+    ch = 1
+    while ch != 0:
+        ch = int(input("What would you like to do?\n1: Add Student\n2: Modify Student details\n3: Delete Student record\n4: Fees Collection\n5: Report of Students\n6: Display all Students\n0: Exit"))
+        if ch == 1:
+            admit_new_student()
+        elif ch == 2:
+            modify_student(int(input("\nEnter the id of the student: ")))
+        elif ch == 3:
+            remove_student()
+        elif ch == 4:
+            pay_fees(int(input("\nEnter the id of the student: ")))
+        elif ch == 5:
+            student_report()
+        elif ch == 6:
+            display_students()
+
 if __name__ == "__main__":
-    check_database_existance()
-    check_table_existance()
     password = "12345"
     for i in range(5):
         enter_pass = input("Enter the password: ")
@@ -118,5 +155,7 @@ if __name__ == "__main__":
     else:
         from sys import exit
         exit()
-    
-    main() # TODO
+
+    check_database_existance()
+    check_table_existance()
+    main() #TODO
