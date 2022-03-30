@@ -5,7 +5,7 @@ TODO:
 i) Admiting new student (done)
 ii) Deleting Student (done)
 iii) Displaying all students (done)
-iv) Report of Student (not done)
+iv) Report of Student (done)
 v) Detail Modification (done)
 vi) Fees Collection (done)
 '''
